@@ -1,7 +1,7 @@
 from functions import *
 import xlsxwriter
 
-DNS_Domains = open('All_Domains.txt', 'r')
+DNS_Domains = open('test_domains.txt', 'r')
 Domains= (list(map(str.strip ,DNS_Domains.readlines())))
 
 
@@ -13,7 +13,7 @@ console_intro(Domains)
 
 # Filters live vs dead sites #
 #################################### 
-live,dead = get_url_status(Domains)
+live, res_codes, dead = get_url_status(Domains)
 ####################################
 
 # CLI live/dead server summary message #
@@ -25,7 +25,7 @@ text_file_output_dead_urls(dead)
 
 
 
-sites_2xx, sites_3xx, sites_4xx, sites_5xx = filter_reponse_code(live)
+sites_2xx, sites_3xx, sites_4xx, sites_5xx = filter_reponse_code(live, res_codes)
 
 text_file_output_live_server_responses(sites_2xx, sites_3xx, sites_4xx, sites_5xx)
 

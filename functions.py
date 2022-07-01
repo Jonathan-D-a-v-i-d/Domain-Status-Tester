@@ -9,6 +9,7 @@ def get_url_status(urls):
     ## Server Lists
     live_server_list = [] 
     dead_server_list = []
+    response_code_list =[]
 
     ## Status Counter
     total_count = len(urls)
@@ -20,8 +21,10 @@ def get_url_status(urls):
     for url in urls:
         try:
             r = requests.get(url, timeout = time_out)
-            add = "SERVER STATUS " + str(r.status_code) + ":   " + url
+            status_code = str(r.status_code)
+            add = "SERVER STATUS " + status_code + ":   " + url
             live_server_list.append(add)
+            response_code_list.append(status_code)
             count +=1
             print(c.GREEN + c.BOLD + "LIVE SERVER  " + c.END + c.BOLD + c.YELLOW + "url:  " + c.END + c.GREEN + c.BOLD + url + c.END + c.YELLOW + " ----------STATUS " + c.END  + c.BLUE + c.BOLD + str(count) + "/" + str(total_count) + c.END )
         except Exception as e:
@@ -48,7 +51,7 @@ def get_url_status(urls):
         print(x)
 
     """
-    return live_server_list, dead_server_list
+    return live_server_list, response_code_list, dead_server_list 
 
 
 
@@ -91,26 +94,31 @@ def text_file_output_dead_urls(dead):
     )
 
 
-def filter_reponse_code(live):
-    options_4xx = ["400","401","402","403","404","405","406","407","408","409","410","411","412","413","414","415","416","417","418","419","420","421","422","423","424","425","426","428","429","431","451"]
-    options_2xx = ["200","201","202","203","204","205","206","207","208","226"]
-    options_3xx = ["301","302","303","304","305","306","307","308"]
-    options_5xx = ["500","501","502","503","504","505","506","507","508","510","511"]
+def filter_reponse_code(live, res_codes):
 
+    # Creating lists for export into txt/csv
     sites_4xx = []
     sites_2xx = []
     sites_3xx =[]
     sites_5xx =[]
+    
+    # Dataframe by zipping each live response with its response code
+    df = zip(live, res_codes)
+    
+    # Appending the live_url to each list based off the first char in the response code
+    for d in df:
+        response_code = d[1]
+        live_url = d[0]
+        if response_code[0] == "2":
+            sites_2xx.append(live_url)
+        elif response_code[0] == "3":
+            sites_3xx.append(live_url)
+        elif response_code[0] == "4":
+            sites_4xx.append(live_url)
+        elif response_code[0] == "5":
+            sites_5xx.append(live_url)
 
-    for live_response in live:
-        if any(x in live_response for x in options_4xx):
-            sites_4xx.append(live_response)
-        elif any(x in live_response for x in options_2xx):
-            sites_2xx.append(live_response)
-        elif any(x in live_response for x in options_3xx):
-            sites_3xx.append(live_response)
-        elif any(x in live_response for x in options_5xx):
-            sites_5xx.append(live_response)
+
     return sites_2xx, sites_3xx, sites_4xx, sites_5xx
 
 
@@ -121,22 +129,35 @@ def filter_reponse_code(live):
 
 
 def text_file_output_live_server_responses(status_code_2xx,status_code_3xx,status_code_4xx,status_code_5xx):
+    res_type_2xx = "2xx"
+    res_type_3xx = "3xx"
+    res_type_4xx = "4xx"
+    res_type_5xx = "5xx"
 
     #Success Message
-    def successmessage(status_group):
-        if(status_group == False):
-            print( c.GREEN + c.BOLD + "\n" +
-            "***************************************************\n"
-            " Successfully found "+ str(status_group) + " domains in your search pool"+"\n" 
-            "***************************************************\n"
-            + c.END
-            )
+    def successmessage(status_group, res_type):
+            amount = str(len(status_group))
+            if len(status_group) == 1:
+                print( c.GREEN + c.BOLD + "\n" +
+                "******************************************************\n"
+                + amount + " " + res_type + " domain found in your search pool"+"\n" 
+                "******************************************************\n"
+                + c.END
+                )
+            else:
+                print( c.GREEN + c.BOLD + "\n" +
+                "******************************************************\n"
+                + amount + " " + res_type + " domains found in your search pool"+"\n" 
+                "******************************************************\n"
+                + c.END
+                )
+
+
     #Error Message
-    def errormessage(status_group):
-        if(status_group == False):
+    def errormessage(res_type):
             print( c.RED + c.BOLD + "\n" +
             "***************************************************\n"
-            "  " + str(status_group) + "Don't exist in your search pool" +"\n" 
+             "No " + res_type + " domains found in your search pool" +"\n" 
             "***************************************************\n"
             + c.END
             )
@@ -145,30 +166,31 @@ def text_file_output_live_server_responses(status_code_2xx,status_code_3xx,statu
         with open ("Status_Codes_2xx", "w") as f:
             for status_code in status_code_2xx:
                 f.write(status_code + "\n")
-        successmessage(status_code_2xx)
-    else: errormessage(status_code_2xx)
+        successmessage(status_code_2xx, res_type_2xx)
+    else: 
+        errormessage(res_type_2xx)
 
 
     if(status_code_3xx):
         with open ("Status_Codes_3xx", "w") as f:
             for status_code in status_code_3xx:
                 f.write(status_code + "\n")
-        successmessage(status_code_3xx)
-    else: errormessage(status_code_3xx)
+        successmessage(status_code_3xx, res_type_3xx)
+    else: errormessage(res_type_3xx)
 
     if(status_code_4xx):
         with open ("Status_Codes_4xx", "w") as f:
             for status_code in status_code_4xx:
                 f.write(status_code + "\n")
-        successmessage(status_code_4xx)
-    else: errormessage(status_code_4xx)
+        successmessage(status_code_4xx, res_type_4xx)
+    else: errormessage(res_type_4xx)
 
     if(status_code_5xx):
         with open ("Status_Codes_5xx", "w") as f:
             for status_code in status_code_5xx:
                 f.write(status_code + "\n")
-        successmessage(status_code_5xx)    
-    else: errormessage(status_code_5xx)
+        successmessage(status_code_5xx, res_type_5xx)    
+    else: errormessage(res_type_5xx)
 
     
 
