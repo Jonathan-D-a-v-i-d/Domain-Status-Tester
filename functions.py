@@ -3,10 +3,11 @@ from colors import colors as c
 from pyfiglet import *
 
 
-""" Tests domain list to search for live servers behind requests, returns two lists based off if there is a server response """
-def get_url_status(urls): 
 
-    # counts urls for status message in later function 
+def get_url_status(urls): 
+    """ Tests domain list to search for live servers behind requests, returns two lists based off if there is a server response """
+
+    ## counts urls for status message in later function 
     url_count = len(urls)
 
     ## Server Lists
@@ -35,25 +36,7 @@ def get_url_status(urls):
             dead_server_list.append(add)
             count += 1
             print(c.RED + c.BOLD + "DEAD SERVER  " + c.END + c.BOLD + c.YELLOW + "url:  " + c.RED + c.BOLD + url + c.END + c.YELLOW + " ----------STATUS " + c.END + c.BLUE + c.BOLD + str(count) + "/" + str(total_count) + c.END)
-    
-    #Test for list -- worked
-    """
-    print("LIVE SERVER LIST")
-    print(type(live_server_list))
-    for x in live_server_list:
-        print(x)
 
-    print("**********************")
-    print("**********************")
-    print("**********************")
-    print("**********************")
-
-    print("DEAD SERVER LIST")
-    print(type(dead_server_list))
-    for x in dead_server_list:
-        print(x)
-
-    """
     return live_server_list, response_code_list, dead_server_list, url_count
 
 
@@ -134,10 +117,10 @@ def output_results_terminal(urls, live, dead,status_code_2xx,status_code_3xx,sta
 
 
 
-
+    #Prints live site results title
     print( "\n" +
            "\n" +
-           c.GREEN + c.BOLD +
+           c.GREEN + c.BOLD + c.UNDERLINE +
            "LIVE SITE RESULTS:" +
            c.END
         )
