@@ -13,16 +13,12 @@ console_intro(Domains)
 
 # Filters live vs dead sites #
 #################################### 
-live, res_codes, dead = get_url_status(Domains)
+live, res_codes, dead, urls = get_url_status(Domains)
 ####################################
 
-# CLI live/dead server summary message #
-#################################################
-console_server_response_summary(Domains,live,dead)
-#################################################
+sites_2xx, sites_3xx, sites_4xx, sites_5xx = filter_reponse_code(live, res_codes)
 
-text_file_output_dead_urls(dead)
-
+output_results_terminal(urls, live, dead,sites_2xx,sites_3xx,sites_4xx,sites_5xx)
 
 
 sites_2xx, sites_3xx, sites_4xx, sites_5xx = filter_reponse_code(live, res_codes)
@@ -31,15 +27,3 @@ text_file_output_live_server_responses(sites_2xx, sites_3xx, sites_4xx, sites_5x
 
 
 
-"""
-for x in live:
-    print(x)
-
-print(
-    "2xx codes " +str(bool(sites_2xx)) + "\n"
-    "3xx codes " +str(bool(sites_3xx)) + "\n"
-    "4xx codes " +str(bool(sites_4xx)) + "\n"
-    "5xx codes " +str(bool(sites_5xx)) + "\n"
-    
-    )
-"""
