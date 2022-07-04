@@ -1,5 +1,8 @@
 from functions import *
+from output import Output
+from terminal import Terminal
 import xlsxwriter
+
 
 DNS_Domains = open('test_domains.txt', 'r')
 Domains= (list(map(str.strip ,DNS_Domains.readlines())))
@@ -7,7 +10,7 @@ Domains= (list(map(str.strip ,DNS_Domains.readlines())))
 
 # CLI Intro Message #
 ##################### 
-console_intro(Domains)
+Terminal.intro(Domains)
 ##################### 
 
 
@@ -18,12 +21,12 @@ live, res_codes, dead, urls = get_url_status(Domains)
 
 sites_2xx, sites_3xx, sites_4xx, sites_5xx = filter_reponse_code(live, res_codes)
 
-output_results_terminal(urls, live, dead,sites_2xx,sites_3xx,sites_4xx,sites_5xx)
+
+Terminal.output(urls, live, dead,sites_2xx,sites_3xx,sites_4xx,sites_5xx)
 
 
-sites_2xx, sites_3xx, sites_4xx, sites_5xx = filter_reponse_code(live, res_codes)
-
-text_file_output_live_server_responses(sites_2xx, sites_3xx, sites_4xx, sites_5xx)
+Output.dead_urls(dead)
+Output.txt(sites_2xx, sites_3xx, sites_4xx, sites_5xx)
 
 
 
