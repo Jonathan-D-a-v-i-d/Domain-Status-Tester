@@ -1,0 +1,4 @@
+FAILED TO CONNECT:	https://smartonline.co.il
+FAILED TO CONNECT:	https://smartfnx.co.il
+FAILED TO CONNECT:	https://smart5432.com
+FAILED TO CONNECT:	https://smart5432.co.il

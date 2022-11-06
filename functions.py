@@ -31,12 +31,12 @@ def get_url_status(urls):
             live_server_list.append(add)
             response_code_list.append(status_code)
             count +=1
-            print(c.GREEN + c.BOLD + "LIVE SERVER  " + c.END + c.BOLD + c.YELLOW + "url:  " + c.END + c.GREEN + c.BOLD + url + c.END + c.YELLOW + " ----------STATUS " + c.END  + c.BLUE + c.BOLD + str(count) + "/" + str(total_count) + c.END )
+            print(c.GREEN + c.BOLD + "LIVE SERVER  " + c.END + c.BOLD + c.YELLOW + "url:  " + c.END + c.GREEN + c.BOLD + url + c.END + c.YELLOW + " ----------STATUS " + c.END  + c.BOLD + str(count) + "/" + str(total_count) + c.END )
         except Exception as e:
             add = "FAILED TO CONNECT:\t" + url
             dead_server_list.append(add)
             count += 1
-            print(c.RED + c.BOLD + "DEAD SERVER  " + c.END + c.BOLD + c.YELLOW + "url:  " + c.RED + c.BOLD + url + c.END + c.YELLOW + " ----------STATUS " + c.END + c.BLUE + c.BOLD + str(count) + "/" + str(total_count) + c.END)
+            print(c.RED + c.BOLD + "DEAD SERVER  " + c.END + c.BOLD + c.YELLOW + "url:  " + c.RED + c.BOLD + url + c.END + c.YELLOW + " ----------STATUS " + c.END + c.BOLD + str(count) + "/" + str(total_count) + c.END)
 
     return live_server_list, response_code_list, dead_server_list, url_count
 
